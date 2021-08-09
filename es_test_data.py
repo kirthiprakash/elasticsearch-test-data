@@ -142,6 +142,22 @@ def get_data_for_format(format):
         for _ in range(count):
             words.append(""+random.choice(text))
         return_val = " ".join(words)
+    elif field_type == "nested_references":
+        return_val = {
+                "refType" : get_data_for_format("refType:str")[1],
+                "traceID" : get_data_for_format("junk:str")[1],
+                "spanID" : "f5d20c7aad6b9c46"
+                }
+    elif field_type == "nested_process":
+        return_val = {
+                "serviceName" : get_data_for_format("junk:str")[1],
+                "tags" : [ ],
+                "tag" : {
+                    "telemetry@sdk@language" : get_data_for_format("junk:str")[1],
+                    "telemetry@sdk@name" : get_data_for_format("junk:str")[1],
+                    "telemetry@sdk@version" : get_data_for_format("junk:str")[1]
+                    }
+                }
 
     return field_name, return_val
 
@@ -233,8 +249,7 @@ def generate_test_data():
         if out_file:
             out_file.write("%s\n" % json.dumps(item))
 
-        cmd = {'index': {'_index': tornado.options.options.index_name,
-                         '_type': tornado.options.options.index_type}}
+        cmd = {'index': {'_index': tornado.options.options.index_name}}
         if '_id' in item:
             cmd['index']['_id'] = item['_id']
 
